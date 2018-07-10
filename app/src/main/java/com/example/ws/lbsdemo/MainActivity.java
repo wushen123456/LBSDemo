@@ -57,6 +57,21 @@ public class MainActivity extends AppCompatActivity {
             requestLocation();
         }
 
+    }
+
+    //请求位置
+    private void requestLocation() {
+        initLocation();
+        mLocationClient.start();
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        mLocationClient.stop();
+    }
+
+    private void initLocation() {
         //2.配置SDK定位参数
         LocationClientOption option = new LocationClientOption();
 
@@ -65,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
         //LocationMode.Hight_Accuracy：高精度；
         //LocationMode. Battery_Saving：低功耗；
         //LocationMode. Device_Sensors：仅使用设备；
+
+        option.setIsNeedAddress(true);
+        //获取当前位置详细的地址信息
 
         option.setCoorType("bd09ll");
         //可选，设置返回经纬度坐标类型，默认gcj02
@@ -103,11 +121,6 @@ public class MainActivity extends AppCompatActivity {
         //mLocationClient为第二步初始化过的LocationClient对象
         //需将配置好的LocationClientOption对象，通过setLocOption方法传递给LocationClient对象使用
         //更多LocationClientOption的配置，请参照类参考中LocationClientOption类的详细说明
-    }
-
-    //请求位置
-    private void requestLocation() {
-        mLocationClient.start();
     }
 
     //循环将申请的每个权限都进行判断，如果有任何一个权限被拒绝，那么直接调用finish()方法关闭当前程序，所有都同意了就会调用requestLocation()方法一次性申请
@@ -149,6 +162,11 @@ public class MainActivity extends AppCompatActivity {
 
                     double latitude = location.getLatitude();    //获取纬度信息
                     double longitude = location.getLongitude();    //获取经度信息
+                    String country = location.getCountry();//获取国家
+                    String city = location.getCity();//获取城市
+                    String province = location.getProvince();//获取省份
+                    String district = location.getDistrict();//获取区
+                    String street = location.getStreet();//获取街道
                     float radius = location.getRadius();    //获取定位精度，默认值为0.0f
                     String coorType = location.getCoorType();
                     //获取经纬度坐标类型，以LocationClientOption中设置过的坐标类型为准
@@ -158,6 +176,11 @@ public class MainActivity extends AppCompatActivity {
                     //把获得的结果显示出来
                     currentPosition.append("维度:").append(latitude).append("\n");
                     currentPosition.append("经度:").append(longitude).append("\n");
+                    currentPosition.append("国家:").append(country).append("\n");
+                    currentPosition.append("省:").append(province).append("\n");
+                    currentPosition.append("市:").append(city).append("\n");
+                    currentPosition.append("区:").append(district).append("\n");
+                    currentPosition.append("街道:").append(street).append("\n");
                     currentPosition.append("定位精度:").append(radius).append("\n");
                     currentPosition.append("经纬度坐标类型:").append(coorType).append("\n");
                     currentPosition.append("定位错误返回码:").append(errorCode).append("\n");
